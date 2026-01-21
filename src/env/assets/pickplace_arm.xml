@@ -1,0 +1,105 @@
+<mujoco model="pickplace_arm">
+  <compiler angle="radian" coordinate="local" inertiafromgeom="true"/>
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="RK4" cone="elliptic"/>
+  <size njmax="1000" nconmax="400"/>
+
+  <default>
+    <joint damping="2" armature="0.02" limited="true"/>
+    <geom condim="6" density="600" friction="1 0.005 0.0001" solref="0.005 1" solimp="0.95 0.99 0.001"/>
+
+  </default>
+
+  <contact>
+    <exclude body1="base"  body2="link1"/>
+    <exclude body1="link1" body2="link2"/>
+    <exclude body1="link2" body2="link3"/>
+    <exclude body1="link3" body2="finger_left"/>
+    <exclude body1="link3" body2="finger_right"/>
+    <exclude body1="link3" body2="wrist"/>
+    <exclude body1="wrist" body2="gripper"/>
+
+  </contact>
+
+  <worldbody>
+    <light pos="0 0 2" dir="0 0 -1" diffuse="1 1 1"/>
+    <geom name="floor" type="plane" size="3 3 0.1" rgba="0.95 0.95 0.95 1"/>
+
+    <body name="table" pos="0.60 0 0.35">
+      <geom name="table_top" type="box" size="0.55 0.55 0.02" rgba="0.85 0.85 0.85 1"/>
+      <geom name="table_leg" type="cylinder" size="0.04 0.33" pos="0 0 -0.33" rgba="0.7 0.7 0.7 1"/>
+    </body>
+
+    <body name="base" pos="0.60 0 0.38">
+      <geom name="base_geom" type="cylinder" size="0.06 0.01" rgba="0.25 0.25 0.25 1"
+            contype="0" conaffinity="0"/>
+
+      <joint name="j1_yaw" type="hinge" axis="0 0 1" range="-3.14159 3.14159"/>
+
+      <body name="link1" pos="0 0 0.03">
+        <geom name="l1" type="capsule" fromto="0 0 0  0 0 0.20" size="0.03" rgba="0.25 0.25 0.25 1"/>
+
+        <joint name="j2_pitch" type="hinge" axis="0 1 0" range="-1.5708 1.5708"/>
+
+        <body name="link2" pos="0 0 0.20">
+          <geom name="l2" type="capsule" fromto="0 0 0  0.22 0 0" size="0.025" rgba="0.25 0.25 0.25 1"/>
+
+          <joint name="j3_pitch" type="hinge" axis="0 1 0" range="-1.5708 1.5708"/>
+
+          <body name="link3" pos="0.22 0 0">
+            <joint name="j4_pitch" type="hinge" axis="0 1 0" range="-1.5708 1.5708"/>
+            <geom name="l3" type="capsule" fromto="0 0 0  0.18 0 0" size="0.022" rgba="0.25 0.25 0.25 1"/>
+
+            <site name="ee_site" pos="0.18 0 0" size="0.01" rgba="1 0 0 1"/>
+
+            <body name="wrist" pos="0.18 0 0">
+  <joint name="j_wrist_pitch" type="hinge" axis="0 1 0" range="-1.2 1.2"/>
+  <site name="wrist_axis" pos="0 0 0" quat="1 0 0 0" size="0.01" rgba="0 0 1 1"/>
+
+  <body name="gripper" pos="0 0 0">
+    <geom name="grip_base" type="box" size="0.015 0.04 0.02" rgba="0.25 0.25 0.25 1"/>
+
+    <body name="finger_left" pos="0.04 0.03 0">
+      <joint name="j_finger_left" type="slide" axis="0 1 0" range="-0.04 0.04"/>
+      <geom name="fingerL" type="box" size="0.04 0.010 0.012" pos="0 0.020 0"
+            rgba="0.25 0.25 0.25 1" friction="2 0.01 0.001"/>
+    </body>
+
+    <body name="finger_right" pos="0.04 0.01 0">
+      <joint name="j_finger_right" type="slide" axis="0 -1 0" range="-0.04 0.04"/>
+      <geom name="fingerR" type="box" size="0.04 0.010 0.012" pos="0 -0.020 0"
+            rgba="0.25 0.25 0.25 1" friction="10 0.01 0.001"/>
+    </body>
+
+    <site name="grasp_site" pos="0 0 0" size="0.008" rgba="0 0.7 0 1"/>
+  </body>
+</body>
+
+          </body>
+        </body>
+      </body>
+    </body>
+
+    <body name="cube" pos="0.62 0.35 0.39">
+      <freejoint name="cube_free"/>
+      <geom name="cube_geom" type="box" size="0.02 0.02 0.02"
+          rgba="0.2 0.8 0.2 1"
+          friction="6 0.05 0.005"
+          solref="0.005 1"
+          solimp="0.95 0.99 0.001"/>
+    </body>
+
+    <site name="target_site" pos="0.58 -0.35 0.39" size="0.016" rgba="1 0 0 1"/>
+  </worldbody>
+
+  <actuator>
+    <position name="a_j1" joint="j1_yaw"   kp="120" ctrlrange="-3.14159 3.14159" dampratio="1"/>
+    <position name="a_j2" joint="j2_pitch" kp="220" ctrlrange="-1.5708 1.5708"   dampratio="1"/>
+    <position name="a_j3" joint="j3_pitch" kp="200" ctrlrange="-1.5708 1.5708"   dampratio="1"/>
+    <position name="a_j4" joint="j4_pitch" kp="180" ctrlrange="-1.5708 1.5708"   dampratio="1"/>
+
+    <position name="a_fL" joint="j_finger_left"  kp="1200" ctrlrange="-0.04 0" forcerange="-200 200"/>
+    <position name="a_fR" joint="j_finger_right" kp="1200" ctrlrange="0 0.04"  forcerange="-200 200"/>
+    <position name="a_wrist" joint="j_wrist_pitch" kp="160" ctrlrange="-1.2 1.2"/>
+
+  </actuator>
+</mujoco>
