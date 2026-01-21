@@ -101,6 +101,7 @@ DONE (home)
 ```
 
 ### Видео
-![Gif](src/env/assets/Pick and Place.gif)
+![Gif](https://github.com/Danil-Moskvin/pickplace_mujoco_arm/blob/main/src/env/assets/Pick%20and%20Place.gif)
 
 ---
+
