@@ -34,11 +34,19 @@
 ```
 pickplace_mujoco_arm/
 ├── src/
-│ ├── configs/ # Параметры и настройки
-│ ├── env/ # Среда MuJoCo и XML модель
-│ ├── control/ # IK, FSM, управление захватом
-│ ├── utils/ # Вспомогательные функции
-│ └── main.py # Точка входа
+│ ├── configs/
+│ │ └── settings.py
+│ ├── control/
+│ │ ├── fsm.py
+│ │ ├── gripper.py
+│ │ └── ik.py
+│ ├── env/
+│ │ ├── assests/
+│ │ │ └── pickplace_arm.xml
+│ │ └── model_loader.py
+│ ├── utils/
+│ │ └── mj_utils.py
+│ └── main.py
 ├── requirements.txt
 └── README.md
 ```
@@ -106,6 +114,7 @@ DONE (home)
 ![Gif](https://github.com/Danil-Moskvin/pickplace_mujoco_arm/blob/main/src/env/assets/Pick%20and%20Place.gif)
 
 ---
+
 
 
 
